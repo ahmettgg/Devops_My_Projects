@@ -20,7 +20,7 @@ provider "github" {
 }
 
 variable "git-name" {
-  default = "james-clarusway"
+  default = "ahmettgg"
 }
 
 variable "git-token" {
@@ -28,7 +28,7 @@ variable "git-token" {
 }
 
 variable "key-name" {
-  default = "mykey"
+  default = "firstkey"
 }
 
 resource "github_repository" "myrepo" {
