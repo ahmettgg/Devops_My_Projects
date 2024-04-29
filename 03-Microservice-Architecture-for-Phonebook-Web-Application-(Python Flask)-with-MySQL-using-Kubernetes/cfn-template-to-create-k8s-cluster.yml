@@ -154,6 +154,7 @@ Resources:
           curl -L -o web_server.yaml "https://raw.githubusercontent.com/ahmettgg/Devops_My_Projects/main/03-Microservice-Architecture-for-Phonebook-Web-Application-(Python%20Flask)-with-MySQL-using-Kubernetes/web_server.yaml"
           curl -L -o result_server.yaml "https://raw.githubusercontent.com/ahmettgg/Devops_My_Projects/main/03-Microservice-Architecture-for-Phonebook-Web-Application-(Python%20Flask)-with-MySQL-using-Kubernetes/result_server.yaml"
           curl -L -o mysql_deploy.yaml "https://raw.githubusercontent.com/ahmettgg/Devops_My_Projects/main/03-Microservice-Architecture-for-Phonebook-Web-Application-(Python%20Flask)-with-MySQL-using-Kubernetes/mysql_deploy.yaml"
+          cd kubernetes-yaml
           kubectl apply -f .
 
   KubeWorker1:
