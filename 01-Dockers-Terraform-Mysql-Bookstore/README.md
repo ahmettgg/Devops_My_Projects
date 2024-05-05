@@ -6,9 +6,9 @@ Bookstore Web API Application aims to create a bookstore web service using Docke
 
 ## Problem Statement
 
-![Project_203](203-bookstore-api.png) 
+![Project_203](203-bookstore-api.png)
 
-- Your team has started working on a project to create a `Bookstore` Application as Web Service.  
+- Your team has started working on a project to create a `Bookstore` Application as Web Service.
 
 - Software Developers in your team have already developed first version of `Bookstore` application. They have designed a database to keep book records with following fields.
 
@@ -22,13 +22,13 @@ Bookstore Web API Application aims to create a bookstore web service using Docke
 
 - Your teammates also created the RESTful web service as given in [Bookstore API](./bookstore-api.py) using Python Flask Framework. Below table shows how the HTTP methods are designed to affect the given resources identified by URIs.
 
-| HTTP Method  | Action | Example|
-| --- | --- | --- |
-| `GET`     |   Obtain information about a resource | http://[ec2-hostname]/books (retrieves list of all books) |
-| `GET`     |   Obtain information about a resource | http://[ec2-hostname]/books/123 (retrieves book with id=123) |
-| `POST`    |   Create a new resource               | http://[ec2-hostname]/books (creates a new book, from data provided with the request) |
-| `PUT`     |   Update a resource                   | http://[ec2-hostname]/books/123 (updates the book with id=123, from data provided with the request) |
-| `DELETE`  |   Delete a resource                   | http://[ec2-hostname]/books/123 (delete the book with id=123) |
+| HTTP Method | Action                              | Example                                                                                             |
+| ----------- | ----------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `GET`       | Obtain information about a resource | http://[ec2-hostname]/books (retrieves list of all books)                                           |
+| `GET`       | Obtain information about a resource | http://[ec2-hostname]/books/123 (retrieves book with id=123)                                        |
+| `POST`      | Create a new resource               | http://[ec2-hostname]/books (creates a new book, from data provided with the request)               |
+| `PUT`       | Update a resource                   | http://[ec2-hostname]/books/123 (updates the book with id=123, from data provided with the request) |
+| `DELETE`    | Delete a resource                   | http://[ec2-hostname]/books/123 (delete the book with id=123)                                       |
 
 - You are, as a cloud engineer, requested to deploy the app in the development environment on a Docker Machine on AWS EC2 Instance using Terraform to showcase your project. To do that you need to;
 
@@ -115,7 +115,7 @@ Bookstore Web API Application aims to create a bookstore web service using Docke
 - run the web application on AWS EC2 instance using the GitHub repo as codebase.
 
 ## Steps to Solution
-  
+
 - Step 1: Download or clone project definition from `clarusway-aws-workshop` repo on Github
 
 - Step 2: Create project folder for local public repo on your pc
