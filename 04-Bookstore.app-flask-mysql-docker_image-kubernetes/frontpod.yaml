@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alpenim
+  labels:
+    app: castello-front
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: castello-front
+  template:
+    metadata:
+      labels:
+        app: castello-front
+    spec:
+      containers:
+      - name: castello
+        image: ahmetgrbzz/bookstore:1.0
+        ports:
+        - containerPort: 3000
+        env:
+          - name: MYSQL_DATABASE_HOST
+            value: "database"
+          - name: MYSQL_USER
+            value: "clarusway"
+          - name: MYSQL_PASSWORD
+            value: "Clarusway_1"
+          - name: MYSQL_DATABASE
+            value: "bookstore_db"

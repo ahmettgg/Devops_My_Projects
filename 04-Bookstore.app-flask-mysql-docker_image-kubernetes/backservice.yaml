@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: database
+spec:
+  selector:
+    app: castello-back
+  ports:
+    - name: "mysqlservice"
+      port: 3306
+  type: ClusterIP
+    
