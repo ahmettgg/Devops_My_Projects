@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-server
+spec:
+  selector:
+    matchLabels:
+      app: webserver-pod
+  template:
+    metadata:
+      labels:
+        app: webserver-pod
+    spec:
+      containers:
+        - name: my-web-server
+          image: ahmetgrbzz/web_server:2.0
+          ports:
+            - containerPort: 80
+          envFrom:
+            - configMapRef:
+                name: server-config
+            - secretRef:
+                name: web-secret
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: server-config
+data:
+  MYSQL_USER: clarus
+  MYSQL_DATABASE: phonebook
+  MYSQL_DATABASE_HOST: mysql-deploy
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: web-secret
+type: Opaque
+data:
+  MYSQL_PASSWORD: Q2xhcnVzd2F5XzE=
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-server-svc
+spec:
+  selector:
+    app: webserver-pod
+  ports:
+    - port: 30001
+      targetPort: 80
+      nodePort: 30003
+  type: NodePort
+    

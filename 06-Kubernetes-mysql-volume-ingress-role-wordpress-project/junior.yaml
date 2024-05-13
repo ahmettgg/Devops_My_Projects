@@ -1,0 +1,50 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: test
+  name: junior-test
+rules:
+- apiGroups: [""] # "" indicates the core API group
+  resources: ["*"]
+  verbs: ["*"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: production
+  name: junior-production
+rules:
+- apiGroups: [""] # "" indicates the core API group
+  resources: ["*"]
+  verbs: ["get", "list"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: jr-test-rb
+  namespace: test
+subjects:
+- kind: Group
+  name: junior
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: junior-test
+  apiGroup: rbac.authorization.k8s.io
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: jr-production-rb
+  namespace: production
+subjects:
+- kind: Group
+  name: junior
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: junior-production
+  apiGroup: rbac.authorization.k8s.io

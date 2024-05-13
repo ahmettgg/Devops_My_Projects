@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: result-server
+spec:
+  selector:
+    matchLabels:
+      app: resultserver-pod
+  template:
+    metadata:
+      labels:
+        app: resultserver-pod
+    spec:
+      containers:
+        - name: my-result-server
+          image: ahmetgrbzz/result_server:2.0
+          ports:
+            - containerPort: 80
+          envFrom:
+            - configMapRef:
+                name: result-config
+            - secretRef:
+                name: result-secret
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: result-config
+data:
+  MYSQL_USER: clarus
+  MYSQL_DATABASE: phonebook
+  MYSQL_DATABASE_HOST: mysql-deploy
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: result-secret
+type: Opaque
+data:
+  MYSQL_PASSWORD: Q2xhcnVzd2F5XzE=
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: result-server-svc
+spec:
+  selector:
+    app: resultserver-pod
+  ports:
+    - port: 30002
+      targetPort: 80
+      nodePort: 30004
+  type: NodePort

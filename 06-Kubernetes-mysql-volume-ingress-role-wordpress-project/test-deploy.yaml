@@ -1,0 +1,202 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-test-pv-vol
+  namespace: test
+  labels:
+    tier: test
+    app: mysql
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-test-pv-claim
+  namespace: test
+  labels:
+    tier: test
+    app: mysql
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-deployment
+  namespace: test
+  labels:
+    tier: test
+    app: mysql
+spec:
+  selector:
+    matchLabels:
+      tier: test
+      app: mysql
+  
+  template:
+    metadata:
+      labels:
+        tier: test
+        app: mysql
+    spec:
+      volumes:
+      - name: mysql-pv-storage
+        persistentVolumeClaim:
+          claimName: "mysql-test-pv-claim"
+      containers:
+      - name: mysql-test
+        image: mysql:5.6
+        
+        
+        envFrom:
+          - secretRef:
+              name: mysql-test-secret      
+        resources:
+          limits:
+            memory: "1Gi"
+            cpu: "250m"
+        ports:
+          - containerPort: 3306
+            name: mysql-test-port
+        
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: mysql-pv-storage
+
+      
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-test-svc
+  namespace: test
+  labels:
+    tier: test
+spec:
+  selector:
+    tier: test
+    app: mysql
+  ports:
+  - port: 3306
+    targetPort: 3306
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress-deploy
+  namespace: test
+  labels:
+    app: wordpress
+    tier: test
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      tier: test
+      app: wordpress
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        tier: test
+        app: wordpress
+    spec:
+      containers:
+      - name: wordpress-cotainer
+        image: wordpress:5.6
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: "0.5"
+            memory: "512Mi"
+          requests:
+            cpu: "0.1"
+            memory: "256Mi"
+        env:
+        - name: WORDPRESS_DB_HOST
+          value: mysql-test-svc
+        envFrom:
+          # - configMapRef:
+          #     name: test-config
+          - secretRef:
+              name: test-secret
+
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - mysql
+            topologyKey: kubernetes.io/hostname
+---
+# apiVersion: v1
+# kind: ConfigMap
+# metadata:
+#   name: test-config
+#   namespace: test
+# data:
+#   WORDPRESS_DB_HOST: mysql-test-svc
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: test-secret
+  namespace: test
+type: Opaque
+data:
+  WORDPRESS_DB_USER: bXlzcWx3cGFkbWlu
+  WORDPRESS_DB_PASSWORD: UEBzc3cwcmQxIQ==
+  WORDPRESS_DB_NAME: d29yZHByZXNzZGI=
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql-test-secret
+  namespace: test
+type: Opaque
+data:
+  MYSQL_USER: bXlzcWx3cGFkbWlu
+  MYSQL_PASSWORD: UEBzc3cwcmQxIQ==
+  MYSQL_DATABASE: d29yZHByZXNzZGI=
+  MYSQL_ROOT_PASSWORD: UEBzc3cwcmQxIQ==
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-svc
+  namespace: test
+  labels:
+    tier: test
+    app: wordpress
+spec:
+  selector:
+    tier: test
+    app: wordpress
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 30001
+  type: NodePort
