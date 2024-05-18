@@ -1,0 +1,11 @@
+- hosts: _ansible_nodejs
+  tasks:
+    - debug:
+        var: hostvars['ansible_postgresql_o'].ansible_privateip
+
+    - debug:
+        var: ansible_privateip
+
+    - ansible.builtin.template:
+        src: /home/ec2-user/ansible/ansible-project/nodejs/.env.j2
+        dest: /home/ec2-user/.env
